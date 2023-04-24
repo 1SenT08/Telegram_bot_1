@@ -8,14 +8,9 @@ from weather_API import Weather
 
 reply_keyboard = [['/help', '/date'],
                   ['/time', '/weather']]
-
-keyboards = [['Темпиратура', 'Давление'],
-            ['Влажность', 'Все вместе']]
-dct = {}
-
-
 markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
-markup_2 = ReplyKeyboardMarkup(keyboards, one_time_keyboard=False)
+
+dct = {}
 
 with open("config.json") as file:
     data = json.load(file)
@@ -39,7 +34,10 @@ async def start(update, context):
 
 async def help_command(update, context):
     """Отправляет сообщение когда получена команда /help"""
-    await update.message.reply_text("Я пока не умею помогать... Я только ваше эхо.")
+    await update.message.reply_text("Привет! Я - бот Энгри. У меня есть куча полезных функций, например:"
+                                    "- Влажность воздуха"
+                                    "- Температура"
+                                    "- и тд. Эксперементируй!")
 
 
 async def time_now(update, context):
@@ -57,22 +55,35 @@ async def weather(update, context):
 
 async def first_response(update, context):
     global dct
-    city = update.message.text
-    w = Weather(city)
-    dct = {'Темпиратура': w.temp(),
-           'Давление': w.pressure(),
-           'Влажность': w.humidity(),
-           'Все вместе': w.all()}
-    await update.message.reply_text(
-        "Что вы хотите узнать?",
-        reply_markup=markup_2
-        )
-    return 2
+    flag = True
+    keyboards = [['Температура', 'Давление'],
+                 ['Влажность', 'Все вместе']]
+    markup_2 = ReplyKeyboardMarkup(keyboards, one_time_keyboard=False)
+
+    try:
+        w = Weather(update.message.text)
+
+        dct = {'Температура': w.temp(),
+               'Давление': w.pressure(),
+               'Влажность': w.humidity(),
+               'Все вместе': w.all()}
+    except Exception as ex:
+        await update.message.reply_text("Некорректное название города.",
+                                        reply_markup=markup
+                                        )
+        flag = False
+    if flag:
+        await update.message.reply_text(
+            "Что вы хотите узнать?",
+            reply_markup=markup_2
+            )
+        return 2
 
 
 async def second_response(update, context):
-    information = dct['update.message.text']
-    await update.message.reply_text(information)
+    information = dct[update.message.text]
+    await update.message.reply_text(information,
+                                    reply_markup=markup)
     return ConversationHandler.END
 
 
@@ -107,6 +118,7 @@ def main():
     application.add_handler(CommandHandler("help", help_command))
     application.add_handler(CommandHandler("time", time_now))
     application.add_handler(CommandHandler("date", date_today))
+    application.add_handler(CommandHandler("weather", weather))
     application.run_polling()
 
 

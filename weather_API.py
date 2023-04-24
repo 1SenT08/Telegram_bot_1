@@ -20,7 +20,7 @@ class Weather:
             print("Некорректное наименование города.")
 
     def temp(self):
-        return f'Темпиратура: {self.data["main"]["temp"]}°C, чувствуется как: {self.data["main"]["feels_like"]}°C.'
+        return f'Температура: {self.data["main"]["temp"]}°C, чувствуется как: {self.data["main"]["feels_like"]}°C.'
 
     def pressure(self):
         return f'Давление: {self.data["main"]["pressure"]} Па.'
@@ -29,6 +29,6 @@ class Weather:
         return f'Влажность воздуха: {self.data["main"]["humidity"]}г/м³.'
 
     def all(self):
-        return f'Темпиратура: {self.data["main"]["temp"]}°C, чувствуется как: {self.data["main"]["feels_like"]}°C. \n' \
+        return f'Температура: {self.data["main"]["temp"]}°C, чувствуется как: {self.data["main"]["feels_like"]}°C. \n' \
                f'Давление: {self.data["main"]["pressure"]} Па.\n' \
                f'Влажность воздуха: {self.data["main"]["humidity"]}г/м³.'
