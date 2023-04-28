@@ -17,7 +17,7 @@ with open("config.json") as file:
 
 # Запускаем логгирование
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG, filename='bot.log'
 )
 
 logger = logging.getLogger(__name__)
@@ -49,7 +49,7 @@ async def date_today(update, context):
 
 
 async def weather(update, context):
-    await update.message.reply_text("О каком городе найти информацию? Напишите на английском.")
+    await update.message.reply_text(f"{context}О каком городе найти информацию? Напишите на английском.")
     return 1
 
 
@@ -72,6 +72,7 @@ async def first_response(update, context):
                                         reply_markup=markup
                                         )
         flag = False
+
     if flag:
         await update.message.reply_text(
             "Что вы хотите узнать?",

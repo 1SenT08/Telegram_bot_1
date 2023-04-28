@@ -1,0 +1,7 @@
+Package             Version
+aiogram             2.25.1
+requests            2.28.2
+json                built-in
+datetime            built-in
+logging
+python-telegram-bot 20.2

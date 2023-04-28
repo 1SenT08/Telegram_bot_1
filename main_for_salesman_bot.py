@@ -10,7 +10,7 @@ with open("config.json") as file:
 
 # Запускаем логгирование
 logging.basicConfig(
-    level=logging.INFO
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG, filename='bot_2.log'
 )
 
 bot = Bot(token=data["BOT_TOKEN_1"])
@@ -27,7 +27,10 @@ async def start(message: types.Message):
         [types.KeyboardButton(text="/help")]
     ]
     keyboard = types.ReplyKeyboardMarkup(keyboard=buttons)
-    await message.answer("Привет! Я продаю доступ к приватному чату с ботом.", reply_markup=keyboard)
+    await message.answer("Привет! Я-  бот продавец. С моей помощью, ты можешь купить доступ к боту - Энгри! "
+                         "У Энгри есть множество интересных функций, а также у него ты можешь пройти викторину!"
+                         " Так что спеши приобрести платный доступ!",
+                         reply_markup=keyboard)
 
 
 @dp.message_handler(commands=['help'])
@@ -38,11 +41,21 @@ async def helps(message: types.Message):
     keyboard = types.ReplyKeyboardMarkup(keyboard=button)
     await message.answer("Если хочешь купить доступ к приватному чату с ботом, нажми: /buy.", reply_markup=keyboard)
 
+# Бот отправит тестовые реквизиты
+@dp.message_handler(commands=['requisites']) # Отправляет пользывателю счет платежа
+async def requisites(message: types.Message):
+    await bot.send_message(message.chat.id, "Тестовые реквизиты: \n"
+                                            " Номер карты: 4111 1111 1111 1111 \n"
+                                            " Дата истечения срока действия: 2024/12 \n"
+                                            " Проверочный код на обратной стороне: 123 \n"
+                                            " Проверочный код 3-D Secure: 12345678 \n")
+
 
 @dp.message_handler(commands=['buy']) # Отправляет пользывателю счет платежа
 async def buy(message: types.Message):
     if data["SBER_TOKEN"].split(':')[1] == 'TEST':
-        await bot.send_message(message.chat.id, "Тестовый платеж!!!")
+        await bot.send_message(message.chat.id, "Тестовый платеж!!!"
+                                                " Для получения тестовых реквизитов, напишите: /requisites")
 
     await bot.send_invoice(message.chat.id,
                            title="Приватный канал с ботом",
