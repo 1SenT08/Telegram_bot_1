@@ -5,3 +5,6 @@ json                built-in
 datetime            built-in
 logging
 python-telegram-bot 20.2
+typing              built-in
+collections         built-in
+sqlite3

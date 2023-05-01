@@ -16,7 +16,7 @@ logging.basicConfig(
 bot = Bot(token=data["BOT_TOKEN_1"])
 dp = Dispatcher(bot)
 
-# цена 100 руб
+# цена за доступ 100 руб
 PRICE = types.LabeledPrice(label="Приглашение в приватный канал связи", amount=100*100)  # в копейках: 10000
 
 
@@ -24,7 +24,8 @@ PRICE = types.LabeledPrice(label="Приглашение в приватный �
 async def start(message: types.Message):
     buttons = [
         [types.KeyboardButton(text="/buy")],
-        [types.KeyboardButton(text="/help")]
+        [types.KeyboardButton(text="/help")],
+        [types.KeyboardButton(text="/requisites")]
     ]
     keyboard = types.ReplyKeyboardMarkup(keyboard=buttons)
     await message.answer("Привет! Я-  бот продавец. С моей помощью, ты можешь купить доступ к боту - Энгри! "
@@ -35,11 +36,14 @@ async def start(message: types.Message):
 
 @dp.message_handler(commands=['help'])
 async def helps(message: types.Message):
-    button = [
-        [types.KeyboardButton(text="/buy")]
+    buttons = [
+        [types.KeyboardButton(text="/buy")],
+        [types.KeyboardButton(text="/help")],
+        [types.KeyboardButton(text="/requisites")]
     ]
-    keyboard = types.ReplyKeyboardMarkup(keyboard=button)
-    await message.answer("Если хочешь купить доступ к приватному чату с ботом, нажми: /buy.", reply_markup=keyboard)
+    keyboard = types.ReplyKeyboardMarkup(keyboard=buttons)
+    await message.answer("Если хочешь купить доступ к приватному чату с ботом, нажми: /buy. \n"
+                         "Если хочешь получить бесплатные реквизиты, напиши /requisites", reply_markup=keyboard)
 
 # Бот отправит тестовые реквизиты
 @dp.message_handler(commands=['requisites']) # Отправляет пользывателю счет платежа
@@ -87,7 +91,7 @@ async def successful_payment(message: types.Message):
     await bot.send_message(message.chat.id,
                            f"Платёж на сумму {message.successful_payment.total_amount // 100}"
                            f" {message.successful_payment.currency}"
-                           f" прошел успешно. Ссылка на группу: https://t.me/+14ZHw2YkBSswNzli")
+                           f" прошел успешно. Ссылка на приватного бота: t.me/First_test_108_bot")
 
 
 if __name__ == "__main__":
