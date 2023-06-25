@@ -45,6 +45,7 @@ class SqlitePersistence(BasePersistence): # сохраняет все сообщ
                 chat_data[chat_id] = {'messages': []}
             chat_data[chat_id]['messages'].append(dict(zip(['id', 'chat_id', 'message_ts', 'message'], row)))
         return chat_data
+
     # Обновляет или добавляет сообщение
     async def update_chat_data(self, chat_id: int, data: CD) -> None:
         for row in data['messages']:
@@ -65,13 +66,16 @@ class SqlitePersistence(BasePersistence): # сохраняет все сообщ
                     chat_id = ? AND message_ts = ?
                 ''', (row['message'], chat_id, row['message_ts']))
         self.conn.commit()
+
     # Из бд обновляет данные в памяти
     async def refresh_chat_data(self, chat_id: int, chat_data: t.Any) -> None:
         data = self.cursor.execute('''SELECT * FROM chat_data WHERE chat_id = ?''', (chat_id,))
         chat_data['messages'] = [dict(zip(['id', 'chat_id', 'message_ts', 'message'], x)) for x in data]
     # просто удаляет
+
     async def drop_chat_data(self, chat_id: int) -> None:
         self.cursor.execute('''DELETE * FROM chat_data WHERE chat_id = ?''', (chat_id,))
+
     # все остальные должны быть со значением pass, иначе будут происходить непонятные ошибки
     async def get_bot_data(self) -> t.Any:
         pass
@@ -177,12 +181,11 @@ async def first_response(update, context):
                'Влажность': w.humidity(),
                'Все вместе': w.all()}
 
-    except Exception as ex:
+    except Exception:
         await update.message.reply_text("Что?",
                                         reply_markup=markup
                                         )
         flag = False
-
     if flag:
         await update.message.reply_text(
             "Что вы хотите узнать?",
@@ -214,8 +217,9 @@ async def show_data(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(
         f"Все сообщения: {facts}"
     )
-
 # Сохроняет все сообщения
+
+
 async def save_message(update: Update, context: CallbackContext) -> None:
     if 'messages' not in context.chat_data:
         context.chat_data['messages'] = []

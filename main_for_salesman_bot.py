@@ -23,9 +23,9 @@ PRICE = types.LabeledPrice(label="Приглашение в приватный �
 @dp.message_handler(commands=['start']) # При написании команде /start, будут доступны 2 кнопки: /help и /buy
 async def start(message: types.Message):
     buttons = [
-        [types.KeyboardButton(text="/buy")],
-        [types.KeyboardButton(text="/help")],
-        [types.KeyboardButton(text="/requisites")]
+        [types.KeyboardButton(text="Купить подписку")],
+        [types.KeyboardButton(text="Помощь")],
+        [types.KeyboardButton(text="Реквизиты")]
     ]
     keyboard = types.ReplyKeyboardMarkup(keyboard=buttons)
     await message.answer("Привет! Я-  бот продавец. С моей помощью, ты можешь купить доступ к боту - Энгри! "
@@ -34,19 +34,19 @@ async def start(message: types.Message):
                          reply_markup=keyboard)
 
 
-@dp.message_handler(commands=['help'])
+@dp.message_handler(text="Помощь")
 async def helps(message: types.Message):
     buttons = [
-        [types.KeyboardButton(text="/buy")],
-        [types.KeyboardButton(text="/help")],
-        [types.KeyboardButton(text="/requisites")]
+        [types.KeyboardButton(text="Купить подписку")],
+        [types.KeyboardButton(text="Помощь")],
+        [types.KeyboardButton(text="Реквизиты")]
     ]
     keyboard = types.ReplyKeyboardMarkup(keyboard=buttons)
-    await message.answer("Если хочешь купить доступ к приватному чату с ботом, нажми: /buy. \n"
-                         "Если хочешь получить бесплатные реквизиты, напиши /requisites", reply_markup=keyboard)
+    await message.answer("Если хочешь купить доступ к приватному чату с ботом, нажми на кнопку - Купить подписку. \n"
+                         "Если хочешь получить бесплатные реквизиты, нажми на Реквизиты", reply_markup=keyboard)
 
 # Бот отправит тестовые реквизиты
-@dp.message_handler(commands=['requisites']) # Отправляет пользывателю счет платежа
+@dp.message_handler(text="Реквизиты") # Отправляет пользывателю счет платежа
 async def requisites(message: types.Message):
     await bot.send_message(message.chat.id, "Тестовые реквизиты: \n"
                                             " Номер карты: 4111 1111 1111 1111 \n"
@@ -55,7 +55,7 @@ async def requisites(message: types.Message):
                                             " Проверочный код 3-D Secure: 12345678 \n")
 
 
-@dp.message_handler(commands=['buy']) # Отправляет пользывателю счет платежа
+@dp.message_handler(text='Купить подписку') # Отправляет пользывателю счет платежа
 async def buy(message: types.Message):
     if data["SBER_TOKEN"].split(':')[1] == 'TEST':
         await bot.send_message(message.chat.id, "Тестовый платеж!!!"

@@ -32,6 +32,3 @@ class Weather:
         return f'Температура: {self.data["main"]["temp"]}°C, чувствуется как: {self.data["main"]["feels_like"]}°C. \n' \
                f'Давление: {self.data["main"]["pressure"]} Па.\n' \
                f'Влажность воздуха: {self.data["main"]["humidity"]}г/м³.'
-
-    def secret_dates(self):
-        return self.data
